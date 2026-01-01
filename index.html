@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    
+    <!-- latest -->
+    <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet" />
+    <title>8bit site</title>
+    <style>
+      body {
+        padding-top: 5%;
+        padding-left: 10%;
+        padding-right: 10%;
+        padding-bottom: 5%;
+      }
+      h1 {
+        text-align: center;
+      }
+    </style>
+
+  </head>
+
+  <body>
+    <center>
+    <nav style="padding: 20px; border-bottom: 3px solid #ccc; margin-bottom: 60px;">
+      <div class="container">
+        <center>
+          <img id="randomicon" width="50" height="50">
+          <h1>
+            What will you do with your time?
+          </h1>
+        </center>
+      </div>
+    </nav>
+
+    <container>
+
+
+
+    <div class="nes-container with-title">
+      <h3 class="title">How far have we come?</h3>
+      Into <i id="year"></i>?
+      <progress class="nes-progress is-primary" id="progressYear" max="100"></progress>
+
+      Into <i id="month"></i>?
+      <progress class="nes-progress is-success" id="progressMonth" max="100"></progress>
+
+      Into the week?
+      <progress class="nes-progress is-warning" id="progressWeek" max="100"></progress>
+
+      Into the day <i id="day"></i>?
+      <progress class="nes-progress is-error" id="progressDay" max="100"></progress>
+
+      Into this hour right now<i id="now"></i>?
+      <progress class="nes-progress is-pattern" id="progressHour" max="100"></progress>
+    </div>
+
+
+
+      <section class="nes-container">
+        <section class="message-list">
+          <section class="message -left">
+            <i class="nes-bcrikko"></i>
+            <!-- Balloon -->
+            <div class="nes-balloon from-left">
+              <p>So what'll <span class="nes-text is-error">you</span> do?</p>
+            </div>
+          </section>
+
+          <section class="message -right">
+            <!-- Balloon -->
+            <div class="nes-balloon from-right">
+              <p>Make the <span class="nes-text is-success">most</span> of it.</p>
+            </div>
+            <i class="nes-bcrikko"></i>
+          </section>
+        </section>
+      </section>   
+    <container>
+
+    <script>
+      // Create a new Date object (represents the current date and time)
+
+      function getTimePercentages(date = new Date()) {
+        const now = date.getTime(); // Current timestamp in milliseconds
+
+        // 1. Percentage of Hour
+        const startOfHour = new Date(date);
+        startOfHour.setMinutes(0, 0, 0); // Set minutes, seconds, milliseconds to 0
+        const elapsedInHour = now - startOfHour.getTime();
+        const percentOfHour = (elapsedInHour / (1000 * 60 * 60)) * 100; // ms in an hour
+
+        // 2. Percentage of Day
+        const startOfDay = new Date(date);
+        startOfDay.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, milliseconds to 0
+        const elapsedInDay = now - startOfDay.getTime();
+        const percentOfDay = (elapsedInDay / (1000 * 60 * 60 * 24)) * 100; // ms in a day
+
+        // 3. Percentage of Week (Assuming week starts on Sunday, getDay() returns 0-6)
+        const startOfWeek = new Date(startOfDay);
+        startOfWeek.setDate(startOfDay.getDate() - startOfDay.getDay());
+        const elapsedInWeek = now - startOfWeek.getTime();
+        const percentOfWeek = (elapsedInWeek / (1000 * 60 * 60 * 24 * 7)) * 100; // ms in a week
+
+        // 4. Percentage of Month
+        const startOfMonth = new Date(date);
+        startOfMonth.setDate(1); // Set day of the month to 1
+        startOfMonth.setHours(0, 0, 0, 0);
+        const endOfMonth = new Date(date);
+        endOfMonth.setDate(1);
+        endOfMonth.setMonth(endOfMonth.getMonth() + 1); // Get the first day of the next month
+        const totalMsInMonth = endOfMonth.getTime() - startOfMonth.getTime();
+        const elapsedInMonth = now - startOfMonth.getTime();
+        const percentOfMonth = (elapsedInMonth / totalMsInMonth) * 100;
+
+        // 5. Percentage of Year
+        const startOfYear = new Date(date);
+        startOfYear.setMonth(0, 1); // Set month to January (0), day to 1
+        startOfYear.setHours(0, 0, 0, 0);
+        const endOfYear = new Date(date);
+        endOfYear.setFullYear(endOfYear.getFullYear() + 1, 0, 1); // First day of next year
+        endOfYear.setHours(0, 0, 0, 0);
+        const totalMsInYear = endOfYear.getTime() - startOfYear.getTime();
+        const elapsedInYear = now - startOfYear.getTime();
+        const percentOfYear = (elapsedInYear / totalMsInYear) * 100;
+
+        return {
+          percentOfHour: percentOfHour.toFixed(4),
+          percentOfDay: percentOfDay.toFixed(4),
+          percentOfWeek: percentOfWeek.toFixed(4),
+          percentOfMonth: percentOfMonth.toFixed(4),
+          percentOfYear: percentOfYear.toFixed(4)
+        };
+      }
+
+        // Example usage:
+      const percentages = getTimePercentages();
+      const now = new Date();
+
+      function updateDailyProgress() {
+        const percentages = getTimePercentages();
+        document.getElementById("progressDay").setAttribute('value', percentages.percentOfDay);
+        document.getElementById("progressHour").setAttribute('value', percentages.percentOfHour);
+      }
+      
+      var randomnumber = Math.floor(Math.random() * (23 - 1 + 1)) + 1;
+      const randomicon = `https://tamagotchicenter.com/pix/item/${randomnumber}.png `;
+      document.getElementById("progressYear").setAttribute('value', percentages.percentOfYear);
+      document.getElementById("progressMonth").setAttribute('value', percentages.percentOfMonth);
+      document.getElementById("progressWeek").setAttribute('value', percentages.percentOfWeek);
+      document.getElementById("progressDay").setAttribute('value', percentages.percentOfDay);
+      document.getElementById("progressHour").setAttribute('value', percentages.percentOfHour);
+
+      document.getElementById("year").innerHTML = now.getFullYear();
+      document.getElementById("month").innerHTML = now.toLocaleString('default', { month: 'long' });
+      document.getElementById("randomicon").setAttribute('src', randomicon);
+      
+      setInterval(updateDailyProgress, 1000);
+    </script>
+
+  </center>
+  </body>
+</html>
